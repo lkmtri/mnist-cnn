@@ -3,18 +3,15 @@ import numpy as np
 
 
 def get_mnist_train_test_set():
-    # Load the MNIST dataset
+    # Load and preprocess the MNIST dataset
     mnist = tf.keras.datasets.mnist
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
     # Normalize the data and expand dimensions
-    x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], x_train.shape[2], 1)
-    x_train = x_train / 255.0
-    x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1)
-    x_test = x_test / 255.0
+    x_train, x_test = x_train[..., tf.newaxis] / 255.0, x_test[..., tf.newaxis] / 255.0
 
-    y_train = tf.one_hot(y_train.astype(np.int32), depth=10)
-    y_test = tf.one_hot(y_test.astype(np.int32), depth=10)
+    # One-hot encode the labels
+    y_train, y_test = tf.one_hot(y_train, depth=10), tf.one_hot(y_test, depth=10)
 
     return (x_train, y_train), (x_test, y_test)
 
@@ -56,5 +53,6 @@ def train_model():
     return model
 
 
-model = train_model()
-model.save("mnist_model.hdf5")
+if __name__ == "main":
+    model = train_model()
+    model.save("mnist_model.hdf5")

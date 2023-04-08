@@ -50,6 +50,7 @@ def plot_predictions(images, predictions):
     plt.tight_layout()
 
 
-images = load_images()
-predictions = predict(images)
-plot_predictions(images, predictions)
+if __name__ == "main":
+    images = load_images()
+    predictions = predict(images)
+    plot_predictions(images, predictions)
